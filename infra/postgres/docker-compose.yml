@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - /infra/postgres/data:/var/lib/postgresql/data # Persists DB data
+    networks:
+      - proxy
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@farshaddavoudi.ir # pgAdmin login email
+      PGADMIN_DEFAULT_PASSWORD: 123456 # pgAdmin login password
+    ports:
+      - "54321:80"
+    depends_on:
+      - postgres
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
