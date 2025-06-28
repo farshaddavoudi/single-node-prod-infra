@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+      - 9443:9443
+      - 9000:9000 # for http
+    volumes:
+      - portainer_data:/infra/portainer/data
+      - /var/run/docker.sock:/var/run/docker.sock # Required to manage Docker
+    networks:
+      - proxy
+
+volumes:
+  portainer_data:
+
+networks:
+  proxy:
+    external: true
