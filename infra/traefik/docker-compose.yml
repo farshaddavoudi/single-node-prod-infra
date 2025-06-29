@@ -1,0 +1,60 @@
+services:
+  traefik:
+    image: traefik:v3.4
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      # - 443:443/tcp # Uncomment if you want HTTP3
+      # - 443:443/udp # Uncomment if you want HTTP3
+      #- 10000:10000 # TCP - optional
+      #- 33073:33073 # APIs - optional
+    security_opt:
+      - no-new-privileges:true # helps to increase security
+    env_file:
+      - .env # store other secrets e.g., dashboard password
+    networks:
+      - proxy
+    environment:
+      TRAEFIK_DASHBOARD_CREDENTIALS: ${TRAEFIK_DASHBOARD_CREDENTIALS} #from .env file. Traefik doesn't support secrets within labels
+      #ARVANCLOUD_API_KEY: ${ARVANCLOUD_API_KEY} # if using .env
+      ARVANCLOUD_API_KEY_FILE: /run/secrets/arvan-token # note using _FILE for docker secrets
+    secrets:
+      - arvan-token
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /infra/traefik/traefik.yml:/traefik.yml:ro
+      - /infra/traefik/acme.json:/acme.json
+      - /infra/traefik/external-routes-config.yml:/external-routes-config.yml:ro
+      #- /infra/traefik/logs:/var/log/traefik
+    labels:
+      - "traefik.enable=true"
+      # http routers
+      - "traefik.http.routers.traefik.entryPoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`farshaddavoudi.ir`)"
+      # http middlewares
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # router middlewares
+      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
+      # tls
+      - "traefik.http.routers.traefik-secure.rule=Host(`farshaddavoudi.ir`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=arvancloud"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=farshaddavoudi.ir"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.farshaddavoudi.ir"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+      # general config
+      #- "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      #- "traefik.docker.network=proxy"
+secrets:
+  arvan-token:
+    file: ./arvan-token.txt
+
+networks:
+  proxy:
+    external: true

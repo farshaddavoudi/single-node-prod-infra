@@ -1,0 +1,4 @@
+// The certificate info will come here
+// Its permission should be modified on the server when created: `sudo chmod 600 acme.json`
+// Should be empty when `docker compose up -d`
+// Should be re-empty when we change from staging to production in Let's encrypt
