@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: Aa123456
     volumes:
       - /infra/postgres/data:/var/lib/postgresql/data # Persists DB data
     networks:
@@ -16,7 +16,7 @@ services:
     container_name: pgadmin
     environment:
       DATABASE_HOST: postgres
-      DATABASE_USERNAME: admin
+      DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: Aa123456
     ports:
       - "54321:80"
