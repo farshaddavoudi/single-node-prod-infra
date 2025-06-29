@@ -12,16 +12,17 @@ services:
       - proxy
 
   pgadmin:
-    image: helxplatform/pgadmin4:v9.4
+    image: rorylshanks/pgadmin4-auto-login:latest
     container_name: pgadmin
-    restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@farshaddavoudi.ir # pgAdmin login email
-      PGADMIN_DEFAULT_PASSWORD: 123456 # pgAdmin login password
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: admin
+      DATABASE_PASSWORD: Aa123456
     ports:
       - "54321:80"
     depends_on:
       - postgres
+    restart: unless-stopped
     networks:
       - proxy
     labels:
