@@ -30,7 +30,7 @@ services:
       - "traefik.http.routers.postgres.rule=Host(`postgres.farshaddavoudi.ir`)"
       - "traefik.http.routers.postgres.entrypoints=https"
       - "traefik.http.routers.postgres.tls=true"
-      - "traefik.http.services.postgres.loadbalancer.server.port=54321"
+      - "traefik.http.services.postgres.loadbalancer.server.port=80"
 
 networks:
   proxy:
