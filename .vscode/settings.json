@@ -4,6 +4,8 @@
     "ARVANCLOUD",
     "farshaddavoudi",
     "localtime",
+    "pihole",
+    "redirectscheme",
     "traefik"
   ]
 }

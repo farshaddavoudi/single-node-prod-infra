@@ -18,7 +18,7 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
   file:
-    filename: /external-routes-config.yml
+    filename: /config.yml
 certificatesResolvers:
   arvancloud:
     acme:

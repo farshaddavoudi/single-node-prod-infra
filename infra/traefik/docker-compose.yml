@@ -27,7 +27,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /infra/traefik/traefik.yml:/traefik.yml:ro
       - /infra/traefik/acme.json:/acme.json
-      - /infra/traefik/external-routes-config.yml:/external-routes-config.yml:ro
+      - /infra/traefik/config.yml:/config.yml:ro
       #- /infra/traefik/logs:/var/log/traefik
     labels:
       - "traefik.enable=true"
