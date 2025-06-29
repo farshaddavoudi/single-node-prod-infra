@@ -1,0 +1,31 @@
+services:
+  redis:
+    image: redis:8.0
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - /infra/redis/data:/data # Persists Redis data
+    networks:
+      - proxy
+    command: redis-server --appendonly yes # Enable persistence
+
+  redisinsight:
+    image: redislabs/redisinsight:2.70
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.redis.rule=Host(`redis.farshaddavoudi.ir`)"
+      - "traefik.http.routers.redis.entrypoints=https"
+      - "traefik.http.routers.redis.tls=true"
+      - "traefik.http.services.redis.loadbalancer.server.port=5540"
+
+networks:
+  proxy:
+    external: true
