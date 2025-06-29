@@ -12,7 +12,7 @@ services:
       - proxy
 
   pgadmin:
-    image: dpage/pgadmin4:9.4
+    image: helxplatform/pgadmin4:v9.4
     container_name: pgadmin
     restart: unless-stopped
     environment:
