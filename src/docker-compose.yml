@@ -2,7 +2,7 @@ services:
   api1:
     image: fericode/api1
     build:
-      context: ./src/Api1
+      context: ./Api1
     container_name: api1
     ports:
       - "8080:8080"
@@ -23,7 +23,7 @@ services:
   client1:
     image: fericode/client1
     build:
-      context: ./src/Client1/Web
+      context: ./Client1/Web
     container_name: client1
     ports:
       - "8081:8081"
