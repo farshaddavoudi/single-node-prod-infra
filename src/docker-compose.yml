@@ -15,10 +15,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.postgres.rule=Host(`api1.farshaddavoudi.ir`)"
-      - "traefik.http.routers.postgres.entrypoints=https"
-      - "traefik.http.routers.postgres.tls=true"
-      - "traefik.http.services.postgres.loadbalancer.server.port=8080"
+      - "traefik.http.routers.api1.rule=Host(`api1.farshaddavoudi.ir`)"
+      - "traefik.http.routers.api1.entrypoints=https"
+      - "traefik.http.routers.api1.tls=true"
+      - "traefik.http.services.api1.loadbalancer.server.port=8080"
 
   client1:
     image: fericode/client1
@@ -39,10 +39,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.postgres.rule=Host(`client1.farshaddavoudi.ir`)"
-      - "traefik.http.routers.postgres.entrypoints=https"
-      - "traefik.http.routers.postgres.tls=true"
-      - "traefik.http.services.postgres.loadbalancer.server.port=8081"
+      - "traefik.http.routers.client1.rule=Host(`client1.farshaddavoudi.ir`)"
+      - "traefik.http.routers.client1.entrypoints=https"
+      - "traefik.http.routers.client1.tls=true"
+      - "traefik.http.services.client1.loadbalancer.server.port=8081"
 
   keycloak:
     image: keycloak/keycloak:nightly
@@ -57,10 +57,10 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.postgres.rule=Host(`sso.farshaddavoudi.ir`)"
-      - "traefik.http.routers.postgres.entrypoints=https"
-      - "traefik.http.routers.postgres.tls=true"
-      - "traefik.http.services.postgres.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.rule=Host(`sso.farshaddavoudi.ir`)"
+      - "traefik.http.routers.keycloak.entrypoints=https"
+      - "traefik.http.routers.keycloak.tls=true"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
 
 networks:
   proxy:
