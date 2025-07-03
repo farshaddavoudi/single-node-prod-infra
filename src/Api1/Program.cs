@@ -2,18 +2,18 @@ using BlazorKCOidcBff.ApiService;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+var keycloakAuthority = builder.Configuration["Keycloak:Authority"] ?? "http://localhost:8080/realms/ata/";
+var keycloakAudience = builder.Configuration["Keycloak:Audience"] ?? "api1";
+var requireHttps = false;
+System.Console.WriteLine($"The Keycloak URL: {keycloakAuthority}");
+
 builder.Services.AddAuthentication()
     .AddJwtBearer("Bearer", jwtOptions =>
 {
-    // Your authority (keycloak realm)
-    jwtOptions.Authority = "http://localhost:8080/realms/ata/";
-
-    // TODO: Maybe change in production
-    // Your audience (scope in keycloak)
-    jwtOptions.Audience = "api1";
-
-    // Allow HTTP for development
-    jwtOptions.RequireHttpsMetadata = false;
+    jwtOptions.Authority = keycloakAuthority;
+    jwtOptions.Audience = keycloakAudience;
+    jwtOptions.RequireHttpsMetadata = requireHttps;
 });
 builder.Services.AddAuthorization();
 

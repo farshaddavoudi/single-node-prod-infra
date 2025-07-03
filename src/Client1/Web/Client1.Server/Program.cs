@@ -85,9 +85,13 @@ builder.Services.AddRazorComponents()
     .AddAuthenticationStateSerialization();
 
 builder.Services.AddHttpContextAccessor();
+var api1Url = Environment.GetEnvironmentVariable("WEATHER_API_URL") ?? builder.Configuration["ApiUrls:WeatherApi"] ?? "http://api1:8080";
+System.Console.WriteLine($"API 1 URL is: {api1Url}");
 builder.Services.AddHttpClient<IWeatherForecaster, ServerWeatherForecaster>(httpClient =>
 {
-    httpClient.BaseAddress = new("http://localhost:5336");
+    httpClient.BaseAddress = new(
+        api1Url
+    );
 });
 
 builder.Services.AddReverseProxy();
