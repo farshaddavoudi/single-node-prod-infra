@@ -1,0 +1,61 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35617.110
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aspire", "Aspire", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "Features", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorKCOidcBff.AppHost", "Aspire\BlazorKCOidcBff.AppHost\BlazorKCOidcBff.AppHost.csproj", "{815C23E9-42C1-499B-921A-F1E7F9BC38A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorKCOidcBff.ServiceDefaults", "Aspire\BlazorKCOidcBff.ServiceDefaults\BlazorKCOidcBff.ServiceDefaults.csproj", "{3AD3F9C9-B90B-1F5D-FCD0-C05849EC283B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorKCOidcBff.WeatherApi", "Features\BlazorKCOidcBff.WeatherApi\BlazorKCOidcBff.WeatherApi.csproj", "{84140EB7-1221-8F9A-7810-1C9B1F9CF914}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorKCOidcBff.Server", "Web\BlazorKCOidcBff.Server\BlazorKCOidcBff.Server.csproj", "{2968F81E-F219-1C90-3FD4-EA99EFC21DC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorKCOidcBff.Client", "Web\BlazorKCOidcBff.Client\BlazorKCOidcBff.Client.csproj", "{D895C466-5B45-8C82-552F-902080F2E658}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{815C23E9-42C1-499B-921A-F1E7F9BC38A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{815C23E9-42C1-499B-921A-F1E7F9BC38A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{815C23E9-42C1-499B-921A-F1E7F9BC38A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{815C23E9-42C1-499B-921A-F1E7F9BC38A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AD3F9C9-B90B-1F5D-FCD0-C05849EC283B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD3F9C9-B90B-1F5D-FCD0-C05849EC283B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD3F9C9-B90B-1F5D-FCD0-C05849EC283B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD3F9C9-B90B-1F5D-FCD0-C05849EC283B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84140EB7-1221-8F9A-7810-1C9B1F9CF914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84140EB7-1221-8F9A-7810-1C9B1F9CF914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84140EB7-1221-8F9A-7810-1C9B1F9CF914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84140EB7-1221-8F9A-7810-1C9B1F9CF914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2968F81E-F219-1C90-3FD4-EA99EFC21DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2968F81E-F219-1C90-3FD4-EA99EFC21DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2968F81E-F219-1C90-3FD4-EA99EFC21DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2968F81E-F219-1C90-3FD4-EA99EFC21DC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D895C466-5B45-8C82-552F-902080F2E658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D895C466-5B45-8C82-552F-902080F2E658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D895C466-5B45-8C82-552F-902080F2E658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D895C466-5B45-8C82-552F-902080F2E658}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{815C23E9-42C1-499B-921A-F1E7F9BC38A8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{3AD3F9C9-B90B-1F5D-FCD0-C05849EC283B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{84140EB7-1221-8F9A-7810-1C9B1F9CF914} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{2968F81E-F219-1C90-3FD4-EA99EFC21DC4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{D895C466-5B45-8C82-552F-902080F2E658} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E9916E98-03BA-4213-98DA-EA6D4D74EBA7}
+	EndGlobalSection
+EndGlobal
