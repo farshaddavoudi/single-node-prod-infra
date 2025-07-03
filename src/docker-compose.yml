@@ -45,7 +45,7 @@ services:
       - "traefik.http.services.postgres.loadbalancer.server.port=8081"
 
   keycloak:
-    image: quay.io/keycloak/keycloak
+    image: keycloak/keycloak:nightly
     container_name: keycloak
     ports:
       - "8083:8080"
