@@ -52,7 +52,6 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-      - KC_HOSTNAME_PORT=443
       - KC_PROXY=edge
     command: start-dev
     networks:
