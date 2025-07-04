@@ -54,9 +54,10 @@ services:
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_PROXY=edge
       - KC_HOSTNAME=sso.farshaddavoudi.ir
+      - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir # FORCE HTTPS
       - KC_HOSTNAME_STRICT=false # Disable strict hostname checking
       - KC_HOSTNAME_STRICT_HTTPS=false # Allow HTTP behind proxy
-      - KC_HTTP_ENABLED=true # Enable HTTP internally
+      - KC_HTTP_ENABLED=false # Enable HTTP internally
     command: start-dev #start --optimized # Use start-dev for development
     networks:
       - proxy
