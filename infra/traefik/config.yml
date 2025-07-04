@@ -1,6 +1,56 @@
 http:
   middlewares:
-    https-redirectscheme:
+    security-chain:
+      chain:
+        middlewares:
+          - forwarded-headers
+          - override-csp
+    balanced-security-chain:
+      chain:
+        middlewares:
+          - permissive-csp
+          - minimal-headers
+    disable-security-chain:
+      chain:
+        middlewares:
+          - no-security-headers
+          - minimal-headers
+          - force-https
+    no-security-headers:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: ""
+          X-Frame-Options: ""
+          X-Content-Type-Options: ""
+          Strict-Transport-Security: ""
+    permissive-csp:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: "default-src * 'unsafe-inline' 'unsafe-eval'; connect-src *; frame-src *; img-src * data:;"
+    minimal-headers:
+      headers:
+        sslProxyHeaders:
+          X-Forwarded-Proto: "https"
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+    override-csp:
+      headers:
+        customResponseHeaders:
+          Content-Security-Policy: >-
+            default-src 'self' https:;
+            connect-src 'self' https:;
+            img-src 'self' https: data:;
+            font-src 'self' https: data:;
+            frame-src 'self' https:;
+            script-src 'self' 'unsafe-inline' 'unsafe-eval';
+            style-src 'self' 'unsafe-inline';
+            base-uri 'self';
+            form-action 'self' https:
+    forwarded-headers:
+      headers:
+        sslProxyHeaders:
+          X-Forwarded-Proto: "https"
+    force-https:
       redirectScheme:
         scheme: https
         permanent: true
@@ -15,7 +65,7 @@ http:
         stsIncludeSubdomains: true # Add includeSubdomains to the Strict-Transport-Security header
         stsPreload: true # Add preload flag appended to the Strict-Transport-Security header
         stsSeconds: 3153600 # Set the max-age of the Strict-Transport-Security header (63072000 = 2 years)
-        contentSecurityPolicy: "default-src 'self'; frame-src 'self' http://sso.farshaddavoudi.ir https://sso.farshaddavoudi.ir"
+        #contentSecurityPolicy: "default-src 'self'; frame-src *"
         referrerPolicy: "strict-origin-when-cross-origin"
         customRequestHeaders:
           X-Forwarded-Proto: https
@@ -47,6 +97,6 @@ http:
       rule: "Host(`external-backend.local.example.com`)"
       middlewares:
         - default-headers
-        - https-redirectscheme
+        - force-https
       tls: {}
       service: external-backend
