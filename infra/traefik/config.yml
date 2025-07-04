@@ -7,15 +7,15 @@ http:
     default-headers:
       headers:
         customBrowserXSSValue: 0 # X-XSS-Protection=1; mode=block
-        frameDeny: true # X-Frame-Options=deny
+        frameDeny: false # X-Frame-Options=deny
+        customFrameOptionsValue: SAMEORIGIN
         browserXssFilter: true
         contentTypeNosniff: true # X-Content-Type-Options=nosniff
         forceSTSHeader: true # Add the Strict-Transport-Security header even when the connection is HTTP
         stsIncludeSubdomains: true # Add includeSubdomains to the Strict-Transport-Security header
         stsPreload: true # Add preload flag appended to the Strict-Transport-Security header
         stsSeconds: 3153600 # Set the max-age of the Strict-Transport-Security header (63072000 = 2 years)
-        customFrameOptionsValue: SAMEORIGIN
-        contentSecurityPolicy: "default-src 'self'"
+        contentSecurityPolicy: "default-src 'self'; frame-src 'self' http://sso.farshaddavoudi.ir https://sso.farshaddavoudi.ir"
         referrerPolicy: "strict-origin-when-cross-origin"
         customRequestHeaders:
           X-Forwarded-Proto: https
