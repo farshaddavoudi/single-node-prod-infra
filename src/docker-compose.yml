@@ -54,9 +54,9 @@ services:
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_PROXY=edge
       - KC_HOSTNAME=sso.farshaddavoudi.ir
-      - KC_HOSTNAME_STRICT=true # Changed to true for better security
-      - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir # Explicit HTTPS URL
-      - KC_HTTP_ENABLED=false # Disable HTTP entirely
+      - KC_HOSTNAME_STRICT=false # Disable strict hostname checking
+      - KC_HOSTNAME_STRICT_HTTPS=false # Allow HTTP behind proxy
+      - KC_HTTP_ENABLED=true # Enable HTTP internally
     command: start-dev #start --optimized # Use start-dev for development
     networks:
       - proxy
@@ -66,7 +66,8 @@ services:
       - "traefik.http.routers.keycloak.entrypoints=https"
       - "traefik.http.routers.keycloak.tls=true"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
-      - "traefik.http.routers.keycloak.middlewares=security-chain@file"
+      #- "traefik.http.routers.keycloak.middlewares=security-chain@file"
+      - "traefik.http.routers.keycloak.middlewares=balanced-security-chain@file"
 
 networks:
   proxy:
