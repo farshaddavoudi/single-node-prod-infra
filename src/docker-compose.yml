@@ -29,7 +29,7 @@ services:
       - "8081:8081"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - Keycloak__Authority=http://keycloak:8080/realms/ata/
+      - Keycloak__Authority=https://sso.farshaddavoudi.ir/realms/ata/ #http://keycloak:8080/realms/ata/
       - Keycloak__ClientId=client1
       - Keycloak__ClientSecret=32mOINpi4LnkOLlherzWfZuZeETe9Wce
       - ApiUrls__WeatherApi=http://api1:8080
@@ -45,7 +45,7 @@ services:
       - "traefik.http.services.client1.loadbalancer.server.port=8081"
 
   keycloak:
-    image: keycloak/keycloak:nightly
+    image: fericode/keycloak:26.3
     container_name: keycloak
     ports:
       - "8083:8080"
@@ -54,7 +54,9 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_PROXY=edge
       - KC_HOSTNAME=sso.farshaddavoudi.ir
-      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT=true # Changed to true for better security
+      - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir # Explicit HTTPS URL
+      - KC_HTTP_ENABLED=false # Disable HTTP entirely
     command: start-dev
     networks:
       - proxy
@@ -62,9 +64,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.rule=Host(`sso.farshaddavoudi.ir`)"
       - "traefik.http.routers.keycloak.entrypoints=https"
-      - "traefik.http.routers.keycloak.middlewares=override-csp@file"
       - "traefik.http.routers.keycloak.tls=true"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.middlewares=forwarded-headers@file,override-csp@file"
 
 networks:
   proxy:
