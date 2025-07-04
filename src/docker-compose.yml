@@ -57,7 +57,7 @@ services:
       - KC_HOSTNAME_STRICT=true # Changed to true for better security
       - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir # Explicit HTTPS URL
       - KC_HTTP_ENABLED=false # Disable HTTP entirely
-    command: start --optimized # Use start-dev for development
+    command: start-dev #start --optimized # Use start-dev for development
     networks:
       - proxy
     labels:
