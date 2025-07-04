@@ -50,8 +50,8 @@ services:
     ports:
       - "8083:8080"
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_PROXY=edge
       - KC_HOSTNAME=sso.farshaddavoudi.ir
       - KC_HOSTNAME_STRICT=true # Changed to true for better security
@@ -66,7 +66,7 @@ services:
       - "traefik.http.routers.keycloak.entrypoints=https"
       - "traefik.http.routers.keycloak.tls=true"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
-      - "traefik.http.routers.keycloak.middlewares=forwarded-headers@file,override-csp@file"
+      - "traefik.http.routers.keycloak.middlewares=security-chain@file"
 
 networks:
   proxy:
