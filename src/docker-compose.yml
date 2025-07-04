@@ -60,7 +60,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.keycloak.rule=Host(`sso.farshaddavoudi.ir`)"
       - "traefik.http.routers.keycloak.entrypoints=https"
-      - "traefik.http.routers.keycloak.middlewares=override-csp"
+      - "traefik.http.routers.keycloak.middlewares=override-csp@file"
       - "traefik.http.routers.keycloak.tls=true"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
 
