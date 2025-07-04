@@ -53,6 +53,8 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_PROXY=edge
+      - KC_HOSTNAME=sso.farshaddavoudi.ir
+      - KC_HOSTNAME_STRICT=false
     command: start-dev
     networks:
       - proxy
