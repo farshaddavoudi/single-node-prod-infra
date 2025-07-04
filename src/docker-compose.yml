@@ -56,6 +56,7 @@ services:
       #- KC_DB_USERNAME=postgres
       #- KC_DB_PASSWORD=foo
       - KC_PROXY=edge
+      - KC_PROXY_ADDRESS_FORWARDING=true
       - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir/auth # FORCE HTTPS
       - KC_HOSTNAME_STRICT=false # Disable strict hostname checking
       - KC_HOSTNAME_STRICT_HTTPS=false # Allow HTTP behind proxy
