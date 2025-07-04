@@ -67,7 +67,7 @@ services:
       - "traefik.http.routers.keycloak.tls=true"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       #- "traefik.http.routers.keycloak.middlewares=security-chain@file"
-      - "traefik.http.routers.keycloak.middlewares=balanced-security-chain@file"
+      - "traefik.http.routers.keycloak.middlewares=disable-security-chain@file"
 
 networks:
   proxy:
