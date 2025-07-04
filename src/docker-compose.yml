@@ -55,7 +55,7 @@ services:
       #- KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
       #- KC_DB_USERNAME=postgres
       #- KC_DB_PASSWORD=foo
-      - KC_PROXY_HEADERS="xforwarded"
+      - KC_PROXY_HEADERS=xforwarded
       - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir/auth # FORCE HTTPS
       - KC_HOSTNAME_STRICT=false # Disable strict hostname checking
       - KC_HTTP_ENABLED=false # Enable HTTP internally
