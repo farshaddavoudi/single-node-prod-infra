@@ -52,9 +52,6 @@ services:
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-      #- KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak
-      #- KC_DB_USERNAME=postgres
-      #- KC_DB_PASSWORD=foo
       - KC_PROXY_HEADERS=xforwarded
       - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir/auth # FORCE HTTPS
       - KC_HOSTNAME_STRICT=false # Disable strict hostname checking
@@ -69,12 +66,11 @@ services:
       - "traefik.http.routers.keycloak.tls=true"
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       #- "traefik.http.routers.keycloak.middlewares=security-chain@file"
-      - "traefik.http.routers.keycloak.middlewares=disable-security-chain@file"
-    # volumes:
-    #   - /config/keycloak/themes/:/opt/keycloak/themes/
-    #   - /config/keycloak/deployments:/opt/keycloak/providers
-    # depends_on:
-    #   - postgres
+      - "traefik.http.routers.keycloak.middlewares=balanced-security-chain@file"
+    volumes:
+      - ./keycloak.conf:/opt/keycloak/conf/keycloak.conf
+      #- /config/keycloak/themes/:/opt/keycloak/themes/
+      #- /config/keycloak/deployments:/opt/keycloak/providers
 
 networks:
   proxy:
