@@ -31,7 +31,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - Keycloak__Authority=https://sso.farshaddavoudi.ir/realms/ata/ #http://keycloak:8080/realms/ata/
       - Keycloak__ClientId=ata-client1
-      - Keycloak__ClientSecret=F9gN5wZIjPvWYzvV0arkl5UG99egr3WL
+      - Keycloak__ClientSecret=f54yyZl7CTkOVbMr9O9rjhkgp4UDCUOe
       - ApiUrls__WeatherApi=http://api1:8080
     depends_on:
       - api1
