@@ -68,7 +68,7 @@ services:
       #- "traefik.http.routers.keycloak.middlewares=security-chain@file"
       - "traefik.http.routers.keycloak.middlewares=balanced-security-chain@file"
     volumes:
-      - /src/Keycloak/keycloak.conf:/opt/keycloak/conf
+      - /src/Keycloak/conf:/opt/keycloak/conf
       #- /config/keycloak/themes/:/opt/keycloak/themes/
       #- /config/keycloak/deployments:/opt/keycloak/providers
 
