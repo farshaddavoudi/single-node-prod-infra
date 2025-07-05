@@ -67,8 +67,8 @@ services:
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       #- "traefik.http.routers.keycloak.middlewares=security-chain@file"
       - "traefik.http.routers.keycloak.middlewares=balanced-security-chain@file"
-    volumes:
-      - ./keycloak-configs/conf:/opt/keycloak/conf
+    volumes: # Need to move manually to VM, if Portainer is used
+      - /infra/keycloak/config:/opt/keycloak/conf
       #- /config/keycloak/themes/:/opt/keycloak/themes/
       #- /config/keycloak/deployments:/opt/keycloak/providers
 
