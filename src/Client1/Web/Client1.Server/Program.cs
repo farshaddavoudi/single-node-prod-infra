@@ -4,29 +4,41 @@ using Client1.Server;
 using Client1.Server.Components;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using ShopNet.Portal.Extensions;
+using System.Text.Json;
 
 const string KC_OIDC_SCHEME = "KeycloakOidc";
+
+Console.WriteLine("Hello From Client1.Server");
 
 var builder = WebApplication.CreateBuilder(args);
 
 // https://github.com/dotnet/eShop/blob/main/src/WebApp/Extensions/Extensions.cs
 JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
+var keysPath = "/var/data_protection_keys";
+Directory.CreateDirectory(keysPath);
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+
 builder.Services.Configure<KeycloakOptions>(
     builder.Configuration.GetSection("Keycloak"));
+
+var keycloakConfig = builder.Configuration
+    .GetSection("Keycloak")
+    .Get<KeycloakOptions>();
+
+string kcConfig = JsonSerializer.Serialize(keycloakConfig);
 
 builder.Services
     .AddAuthentication(KC_OIDC_SCHEME)
         .AddOpenIdConnect(KC_OIDC_SCHEME, oidcOptions =>
     {
         oidcOptions.RequireHttpsMetadata = false; // Change over http calls to Keycloak, set to true in production
-
-        var keycloakConfig = builder.Configuration
-            .GetSection("Keycloak")
-            .Get<KeycloakOptions>();
 
         // Configure Keycloak integration
         oidcOptions.Authority = keycloakConfig?.Authority;  // Your authority (keycloak realm)
@@ -86,7 +98,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpContextAccessor();
 var api1Url = Environment.GetEnvironmentVariable("WEATHER_API_URL") ?? builder.Configuration["ApiUrls:WeatherApi"] ?? "http://api1:8080";
-System.Console.WriteLine($"API 1 URL is: {api1Url}");
+System.Console.WriteLine($"######### API 1 URL is: {api1Url}");
+System.Console.WriteLine($"Keycloak Configuration: {kcConfig}");
 builder.Services.AddHttpClient<IWeatherForecaster, ServerWeatherForecaster>(httpClient =>
 {
     httpClient.BaseAddress = new(
@@ -102,6 +115,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseHttpsRedirection();
 }
 else
 {
@@ -109,8 +123,6 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
 
 app.MapStaticAssets();
 app.UseAntiforgery();
