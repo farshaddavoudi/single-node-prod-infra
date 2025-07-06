@@ -21,7 +21,7 @@ services:
       - "traefik.http.services.api1.loadbalancer.server.port=8080"
 
   client1:
-    image: fericode/client1:0706-1854
+    image: fericode/client1:0706-2017
     build:
       context: ./Client1/Web
     container_name: client1

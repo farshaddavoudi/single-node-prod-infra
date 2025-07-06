@@ -2,9 +2,12 @@ using Client1;
 using Client1.Client.Weather;
 using Client1.Server;
 using Client1.Server.Components;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using ShopNet.Portal.Extensions;
@@ -46,9 +49,14 @@ string kcConfig = JsonSerializer.Serialize(keycloakConfig);
 
 builder.Services
     .AddAuthentication(KC_OIDC_SCHEME)
+    .AddCookie(options =>
+    {
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    })
         .AddOpenIdConnect(KC_OIDC_SCHEME, oidcOptions =>
     {
-        oidcOptions.RequireHttpsMetadata = false; // Change over http calls to Keycloak, set to true in production
+        oidcOptions.RequireHttpsMetadata = builder.Environment.IsProduction(); // Change over http calls to Keycloak, set to true in production
 
         // Configure Keycloak integration
         oidcOptions.Authority = keycloakConfig?.Authority;  // Your authority (keycloak realm)
@@ -68,6 +76,30 @@ builder.Services
         oidcOptions.TokenValidationParameters.NameClaimType = "name";
         oidcOptions.TokenValidationParameters.RoleClaimType = "roles";
         oidcOptions.PushedAuthorizationBehavior = PushedAuthorizationBehavior.UseIfAvailable;
+
+        // Events for debugging
+        oidcOptions.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProvider = context =>
+            {
+                Console.WriteLine("### OnRedirectToIdentityProvider");
+                // Ensure the redirect URI uses HTTPS
+                if (builder.Environment.IsProduction())
+                {
+                    context.ProtocolMessage.RedirectUri =
+                        $"https://client1.farshaddavoudi.ir{oidcOptions.CallbackPath}";
+
+                    Console.WriteLine($"### RedirectUri= https://client1.farshaddavoudi.ir{oidcOptions.CallbackPath}");
+                }
+                return Task.CompletedTask;
+            },
+            OnMessageReceived = context =>
+            {
+                // Log the received message for debugging
+                Console.WriteLine($"Received message: {context.ProtocolMessage}");
+                return Task.CompletedTask;
+            }
+        };
 
         // Event handling for post-authentication actions
         oidcOptions.Events = new OpenIdConnectEvents
@@ -94,6 +126,15 @@ builder.Services
         };
     })
         .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+
+// Required for reverse proxy
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                               ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 builder.Services.ConfigureCookieOidcRefresh(CookieAuthenticationDefaults.AuthenticationScheme, KC_OIDC_SCHEME);
 
@@ -141,6 +182,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Client1.Client._Imports).Assembly);
+
+app.UseForwardedHeaders();
 
 app.MapEndpoints(builder.Configuration);
 
