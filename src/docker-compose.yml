@@ -21,7 +21,7 @@ services:
       - "traefik.http.services.api1.loadbalancer.server.port=8080"
 
   client1:
-    image: fericode/client1:0706-1854
+    #image: fericode/client1:0706-1854
     build:
       context: ./Client1/Web
     container_name: client1
@@ -45,6 +45,7 @@ services:
       - "traefik.http.routers.client1.entrypoints=https"
       - "traefik.http.routers.client1.tls=true"
       - "traefik.http.services.client1.loadbalancer.server.port=8081"
+      - "traefik.http.routers.keycloak.middlewares=balanced-security-chain@file"
 
   keycloak:
     image: fericode/keycloak:26.3
