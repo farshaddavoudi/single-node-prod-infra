@@ -19,11 +19,11 @@ var builder = WebApplication.CreateBuilder(args);
 // https://github.com/dotnet/eShop/blob/main/src/WebApp/Extensions/Extensions.cs
 JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
-var keysPath = "/var/data_protection_keys";
-Directory.CreateDirectory(keysPath);
-
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+//var keysPath = "/var/data_protection_keys";
+//Directory.CreateDirectory(keysPath);
+//builder.Services.AddDataProtection()
+//    .PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+builder.Services.AddDataProtection().DisableAutomaticKeyGeneration();
 
 builder.Services.Configure<KeycloakOptions>(
     builder.Configuration.GetSection("Keycloak"));
