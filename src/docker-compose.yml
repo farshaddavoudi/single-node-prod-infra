@@ -21,7 +21,7 @@ services:
       - "traefik.http.services.api1.loadbalancer.server.port=8080"
 
   client1:
-    image: fericode/client1:0705-1727
+    image: fericode/client1:0706-1854
     build:
       context: ./Client1/Web
     container_name: client1
@@ -34,7 +34,7 @@ services:
       - Keycloak__ClientSecret=f54yyZl7CTkOVbMr9O9rjhkgp4UDCUOe
       - ApiUrls__WeatherApi=http://api1:8080
     volumes:
-      - data_protection_keys:/var/data_protection_keys
+      - keys:/app/keys
     depends_on:
       - api1
     networks:
@@ -75,7 +75,7 @@ services:
       #- /config/keycloak/deployments:/opt/keycloak/providers
 
 volumes:
-  data_protection_keys:
+  keys:
 
 networks:
   proxy:

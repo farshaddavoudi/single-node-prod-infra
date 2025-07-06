@@ -9,6 +9,7 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o /app/clientout
 WORKDIR /src/Client1.Server
 RUN dotnet restore
+RUN mkdir -p /app/keys && chmod 777 /app/keys
 RUN dotnet publish -c Release -o /app/serverout
 
 # Runtime stage

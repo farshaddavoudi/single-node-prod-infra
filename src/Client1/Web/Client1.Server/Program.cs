@@ -19,11 +19,21 @@ var builder = WebApplication.CreateBuilder(args);
 // https://github.com/dotnet/eShop/blob/main/src/WebApp/Extensions/Extensions.cs
 JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
-//var keysPath = "/var/data_protection_keys";
-//Directory.CreateDirectory(keysPath);
-//builder.Services.AddDataProtection()
-//    .PersistKeysToFileSystem(new DirectoryInfo(keysPath));
-builder.Services.AddDataProtection().DisableAutomaticKeyGeneration();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDataProtection()
+        .DisableAutomaticKeyGeneration()
+        .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "aspnet-keys")));
+}
+else
+{
+    builder.Services.AddDataProtection()
+        .PersistKeysToFileSystem(new DirectoryInfo("/app/keys")) // For Docker containers
+        .SetApplicationName("Client1.Server")
+        .SetDefaultKeyLifetime(TimeSpan.FromDays(90)); // Optional: Set key lifetime
+}
 
 builder.Services.Configure<KeycloakOptions>(
     builder.Configuration.GetSection("Keycloak"));
