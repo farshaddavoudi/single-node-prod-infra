@@ -49,11 +49,11 @@ string kcConfig = JsonSerializer.Serialize(keycloakConfig);
 
 builder.Services
     .AddAuthentication(KC_OIDC_SCHEME)
-    .AddCookie(options =>
-    {
-        options.Cookie.SameSite = SameSiteMode.Lax;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    })
+    //.AddCookie(options =>
+    //{
+    //    options.Cookie.SameSite = SameSiteMode.Lax;
+    //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    //})
         .AddOpenIdConnect(KC_OIDC_SCHEME, oidcOptions =>
     {
         oidcOptions.RequireHttpsMetadata = builder.Environment.IsProduction(); // Change over http calls to Keycloak, set to true in production
