@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Client1.Client.Weather;
+using System.Text.Json;
 
 namespace Client1;
 
@@ -31,8 +32,13 @@ internal sealed class ServerWeatherForecaster(HttpClient httpClient, IHttpContex
         var accessToken = await httpContext.GetTokenAsync("access_token") ??
             throw new InvalidOperationException("No access_token was saved");
 
+        Console.WriteLine($"### Access Token in Forcaster: {accessToken}");
+
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get, "/weather-forecast");
         requestMessage.Headers.Authorization = new("Bearer", accessToken);
+
+        Console.WriteLine(JsonSerializer.Serialize(httpClient));
+
         using var response = await httpClient.SendAsync(requestMessage);
 
         response.EnsureSuccessStatusCode();

@@ -10,6 +10,8 @@ internal static class MapEndpointsExtensions
     {
         string? weatherApiUrl = configuration["ApiUrls:WeatherApi"];
 
+        Console.WriteLine($"### Coming in Endpoints");
+
         endpoints.MapLoginAndLogout();
         endpoints.MapApiForwarder("", weatherApiUrl).RequireAuthorization();
         return endpoints;
