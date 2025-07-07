@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Yarp.ReverseProxy.Forwarder;
 using Yarp.ReverseProxy.Transforms;
 
-namespace ShopNet.Portal.Extensions;
+namespace Client1.Server;
 
 internal static class MapEndpointsExtensions
 {
@@ -24,6 +24,7 @@ internal static class MapEndpointsExtensions
             b.AddRequestTransform(async c =>
             {
                 var accessToken = await c.HttpContext.GetTokenAsync("access_token");
+                Console.WriteLine($"### Access Token in MapEndpoints: {accessToken}");
                 if (!string.IsNullOrWhiteSpace(accessToken))
                 {
                     c.ProxyRequest.Headers.Authorization = new("Bearer", accessToken);

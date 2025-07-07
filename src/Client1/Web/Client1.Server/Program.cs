@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using ShopNet.Portal.Extensions;
 using System.Text.Json;
 
 const string KC_OIDC_SCHEME = "KeycloakOidc";
