@@ -1,6 +1,6 @@
 services:
   api1:
-    image: fericode/api1::0707-1822
+    image: fericode/api1:0707-1822
     build:
       context: ./Api1
     container_name: api1
