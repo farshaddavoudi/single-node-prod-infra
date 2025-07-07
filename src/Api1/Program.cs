@@ -1,10 +1,11 @@
 using BlazorKCOidcBff.ApiService;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 var keycloakAuthority = builder.Configuration["Keycloak:Authority"] ?? "http://localhost:8080/realms/ata/";
-var keycloakAudience = builder.Configuration["Keycloak:Audience"] ?? "api1";
+var keycloakAudience = builder.Configuration["Keycloak:Audience"] ?? "ata-api1";
 var requireHttps = false;
 System.Console.WriteLine($"The Keycloak URL: {keycloakAuthority}");
 
@@ -14,6 +15,17 @@ builder.Services.AddAuthentication()
     jwtOptions.Authority = keycloakAuthority;
     jwtOptions.Audience = keycloakAudience;
     jwtOptions.RequireHttpsMetadata = requireHttps;
+
+    // Add these validation parameters
+    jwtOptions.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = keycloakAuthority,
+        ValidAudiences = new[] { "ata-api1", "account" } // All valid audiences
+    };
 });
 builder.Services.AddAuthorization();
 
