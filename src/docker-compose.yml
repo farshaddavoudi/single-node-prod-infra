@@ -70,10 +70,10 @@ services:
       - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
       #- "traefik.http.routers.keycloak.middlewares=security-chain@file"
       - "traefik.http.routers.keycloak.middlewares=balanced-security-chain@file"
-    volumes: # Need to move manually to VM, if Portainer is used
+    volumes: # Need to move manually to VM, if Portainer is used (Update: It doesn't need now with /infra bind mount trick)
       - /infra/keycloak/conf/:/opt/keycloak/conf/
-      #- /config/keycloak/themes/:/opt/keycloak/themes/
-      #- /config/keycloak/deployments:/opt/keycloak/providers
+      #- /infra/keycloak/themes/:/opt/keycloak/themes/
+      #- /infra/keycloak/deployments:/opt/keycloak/providers
 
 volumes:
   keys:
