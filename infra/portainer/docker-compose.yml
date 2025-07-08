@@ -8,7 +8,8 @@ services:
       - 9443:9443
       - 9000:9000 # for http
     volumes:
-      - portainer_data:/infra/portainer/data
+      - /infra:/infra # ✅ This ensures /infra on host is visible inside Portainer, and bind mounts work.
+      - /infra/portainer/data:/data
       - /var/run/docker.sock:/var/run/docker.sock # Required to manage Docker
     networks:
       - proxy
@@ -18,9 +19,6 @@ services:
       - "traefik.http.routers.portainer.entrypoints=https"
       - "traefik.http.routers.portainer.tls=true"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-
-volumes:
-  portainer_data:
 
 networks:
   proxy:
