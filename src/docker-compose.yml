@@ -52,14 +52,7 @@ services:
     container_name: keycloak
     ports:
       - "8083:8080"
-    environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-      - KC_PROXY_HEADERS=xforwarded
-      - KC_HOSTNAME_URL=https://sso.farshaddavoudi.ir # FORCE HTTPS
-      - KC_HOSTNAME_STRICT=false # Disable strict hostname checking
-      - KC_HTTP_ENABLED=true # Enable HTTP internally
-    command: start-dev #start --optimized # Use start-dev for development
+    command: start # start-dev for development
     networks:
       - proxy
     labels:
