@@ -52,7 +52,7 @@ services:
     container_name: keycloak
     ports:
       - "8083:8080"
-    command: start-dev # start
+    command: start # start-dev for development
     networks:
       - proxy
     labels:
