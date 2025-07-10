@@ -15,6 +15,8 @@ internal static class WeatherApi
         api.MapGet("user-info", GetUserInfoResponse)
             .RequireAuthorization();
 
+        api.MapGet("ping", GetPing);
+
         return api;
     }
 
@@ -53,6 +55,15 @@ internal static class WeatherApi
                 ))
                 .ToArray();
         return forecast;
+    }
+    
+    private static string[] GetPing(HttpContext context)
+    {
+        var ip = $"ip={context.Connection.RemoteIpAddress}";
+        var machine = $"machine=${Environment.MachineName}";
+        var sso = $"sso: https://sso.farshaddavoudi.ir";
+
+        return [ip, machine, sso];
     }
 }
 

@@ -162,4 +162,4 @@ MIT
 
 ---
 
-If you have questions or want to discuss how this approach can help your startup, feel free to reach out or connect on LinkedIn!
+If you have questions or want to discuss how this approach can help your startup, feel free to reach out or connect on LinkedIn.
