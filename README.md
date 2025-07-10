@@ -13,13 +13,13 @@
 flowchart TD
     subgraph Cloud_VM_Ubuntu
         direction TB
-        Traefik["Traefik\n(HTTPS, Routing, Security)"]
+        Traefik["Traefik (HTTPS, Routing, Security)"]
         Portainer["Portainer (GitOps, Management)"]
-        Keycloak["Keycloak\n(SSO)"]
-        API1["API1\n(ASP.NET Core Web API)"]
-        Client1["Client1\n(Blazor/SPA)"]
-        Postgres["Postgres\n(DB)"]
-        Redis["Redis\n(Cache)"]
+        Keycloak["Keycloak (SSO)"]
+        API1["API1 (ASP.NET Core Web API)"]
+        Client1["Client1 (Blazor/SPA)"]
+        Postgres["Postgres (DB)"]
+        Redis["Redis (Cache)"]
     end
     Internet((Internet))
     Internet -->|HTTPS| Traefik
