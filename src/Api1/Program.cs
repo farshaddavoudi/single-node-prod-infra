@@ -30,11 +30,12 @@ builder.Services.AddAuthentication()
 });
 builder.Services.AddAuthorization();
 
+#region Swagger + OAuth Integration
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "API 1", Version = "v1" });
 
-    // Add OAuth2 security definition
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.OAuth2,
@@ -68,25 +69,26 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+#endregion
+
 var app = builder.Build();
 
-app.UseStaticFiles();
+#region Swagger + OAuth Integration
 
+app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    //c.RoutePrefix = string.Empty;
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API 1");
-
-    // Configure OAuth for Swagger UI
     c.OAuthClientId(builder.Configuration["Keycloak:ClientId"]);
     c.OAuthClientSecret(builder.Configuration["Keycloak:ClientSecret"]);
     c.OAuthAppName("API 1 OAuth - Swagger");
     c.OAuthUsePkce();
-    //c.OAuthScopeSeparator(" ");
     c.OAuth2RedirectUrl("/swagger/oauth2-redirect.html");
     c.EnablePersistAuthorization();
 });
+
+#endregion
 
 // Configure the HTTP request pipeline.
 //app.UseHttpsRedirection();
