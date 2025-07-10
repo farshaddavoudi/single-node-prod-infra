@@ -5,17 +5,28 @@ http:
         middlewares:
           - forwarded-headers
           - override-csp
+          - ratelimit-per-ip
     balanced-security-chain:
       chain:
         middlewares:
           - permissive-csp
           - minimal-headers
+          - ratelimit-per-ip
     disable-security-chain:
       chain:
         middlewares:
           - no-security-headers
           - minimal-headers
           - force-https
+          - ratelimit-per-ip
+    ratelimit-per-ip:
+      rateLimit:
+        average: 0.166 # 10 per minute = 0.166 per second
+        burst: 10
+        sourceCriterion:
+          requestHeaderName: X-Real-IP
+          ipStrategy:
+            depth: 0
     no-security-headers:
       headers:
         customResponseHeaders:
