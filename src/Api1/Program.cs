@@ -75,7 +75,6 @@ var app = builder.Build();
 
 #region Swagger + OAuth Integration
 
-app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
