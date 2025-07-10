@@ -94,20 +94,20 @@ http:
           - default-whitelist
           - default-headers
 
-  services:
-    external-backend:
-      loadBalancer:
-        servers:
-          - url: "https://192.168.0.17:8006"
-        passHostHeader: true
-
   routers:
-    external-backend:
+    monitoring-vm-router:
       entryPoints:
         - "https"
-      rule: "Host(`external-backend.local.example.com`)"
+      rule: "Host(`loki.ir`)"
       middlewares:
         - default-headers
         - force-https
-      tls: {}
-      service: external-backend
+      tls: {} # TLS termination
+      service: monitoring-vm
+
+  services:
+    monitoring-vm:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.0.144:9000"
+        passHostHeader: true
