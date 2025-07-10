@@ -14,7 +14,7 @@ flowchart TD
     subgraph Cloud_VM_Ubuntu
         direction TB
         Traefik["Traefik\n(HTTPS, Routing, Security)"]
-        Portainer["Portainer\n(GitOps, Management)"]
+        Portainer["Portainer (GitOps, Management)"]
         Keycloak["Keycloak\n(SSO)"]
         API1["API1\n(ASP.NET Core Web API)"]
         Client1["Client1\n(Blazor/SPA)"]
