@@ -11,7 +11,7 @@
 
 ```mermaid
 flowchart TD
-    subgraph Cloud VM (Ubuntu)
+    subgraph Cloud_VM_Ubuntu
         direction TB
         Traefik["Traefik\n(HTTPS, Routing, Security)"]
         Portainer["Portainer\n(GitOps, Management)"]
