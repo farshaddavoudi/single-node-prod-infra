@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var keycloakAuthority = builder.Configuration["Keycloak:Authority"] ?? "http://localhost:8080/realms/ata/";
 var keycloakAudience = builder.Configuration["Keycloak:Audience"] ?? "ata-api1";
+Console.WriteLine($"Keycloak Settings: Authority={keycloakAuthority} | Audience={keycloakAudience}");
 var requireHttps = false;
 System.Console.WriteLine($"The Keycloak URL: {keycloakAuthority}");
 
@@ -43,8 +44,8 @@ builder.Services.AddSwaggerGen(options =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = new Uri($"{builder.Configuration["Keycloak:Authority"]}/protocol/openid-connect/auth"),
-                TokenUrl = new Uri($"{builder.Configuration["Keycloak:Authority"]}/protocol/openid-connect/token"),
+                AuthorizationUrl = new Uri($"{keycloakAuthority}protocol/openid-connect/auth"),
+                TokenUrl = new Uri($"{keycloakAuthority}protocol/openid-connect/token"),
                 Scopes = new Dictionary<string, string>
                 {
                     { "openid", "OpenID Connect" },
