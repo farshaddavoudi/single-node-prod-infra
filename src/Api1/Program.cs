@@ -33,6 +33,8 @@ builder.Services.AddAuthorization();
 
 #region Swagger + OAuth Integration
 
+builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "API 1", Version = "v1" });
