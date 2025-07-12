@@ -21,6 +21,8 @@
         path: /opt/github-runner
         state: directory
         owner: "{{ runner_user }}"
+        group: "{{ runner_user }}"
+        recurse: yes
         mode: 0755
 
     - name: Download GitHub Actions runner
@@ -34,6 +36,14 @@
         src: /opt/github-runner/runner.tar.gz
         dest: /opt/github-runner/
         remote_src: yes
+
+    - name: Set ownership of runner files to ubuntu user
+      file:
+        path: /opt/github-runner
+        state: directory
+        recurse: yes
+        owner: "{{ runner_user }}"
+        group: "{{ runner_user }}"
 
     - name: Configure the runner
       become_user: "{{ runner_user }}"
