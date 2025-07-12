@@ -19,6 +19,7 @@ services:
       - "traefik.http.routers.api1.entrypoints=https"
       - "traefik.http.routers.api1.tls=true"
       - "traefik.http.services.api1.loadbalancer.server.port=8080"
+      - "traefik.http.routers.api1.middlewares=balanced-security-chain@file"
 
   client1:
     image: fericode/client1:latest

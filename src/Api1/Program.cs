@@ -1,4 +1,5 @@
-using BlazorKCOidcBff.ApiService;
+﻿using BlazorKCOidcBff.ApiService;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -75,6 +76,12 @@ builder.Services.AddSwaggerGen(options =>
 #endregion
 
 var app = builder.Build();
+
+// ✅ This tells ASP.NET Core to respect X-Forwarded-Proto and X-Forwarded-Host headers (sent by Traefik)
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 var redirectUrl = builder.Configuration["Keycloak:SwaggerRedirectUri"];
 Console.WriteLine($"Redirect Swagger URL: {redirectUrl}");
