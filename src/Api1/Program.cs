@@ -76,6 +76,9 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+var redirectUrl = builder.Configuration["Keycloak:SwaggerRedirectUri"];
+Console.WriteLine($"Redirect Swagger URL: {redirectUrl}");
+
 #region Swagger + OAuth Integration
 
 app.UseSwagger();
@@ -86,7 +89,7 @@ app.UseSwaggerUI(c =>
     c.OAuthClientSecret(builder.Configuration["Keycloak:ClientSecret"]);
     c.OAuthAppName("API 1 OAuth - Swagger");
     c.OAuthUsePkce();
-    c.OAuth2RedirectUrl(builder.Configuration["Keycloak:SwaggerRedirectUri"]);
+    c.OAuth2RedirectUrl(redirectUrl);
     c.EnablePersistAuthorization();
 });
 
