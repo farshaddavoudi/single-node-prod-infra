@@ -86,7 +86,7 @@ app.UseSwaggerUI(c =>
     c.OAuthClientSecret(builder.Configuration["Keycloak:ClientSecret"]);
     c.OAuthAppName("API 1 OAuth - Swagger");
     c.OAuthUsePkce();
-    c.OAuth2RedirectUrl("/swagger/oauth2-redirect.html");
+    c.OAuth2RedirectUrl(builder.Configuration["Keycloak:SwaggerRedirectUri"]);
     c.EnablePersistAuthorization();
 });
 
