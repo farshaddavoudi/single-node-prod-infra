@@ -5,7 +5,7 @@
   vars:
     github_repo: "farshaddavoudi/single-node-prod-infra"
     runner_name: "arvancloud-ubuntu-vm"
-    runner_token: "AMCAWUOG33PIEZO7CWMS2KTIOJE4K"
+    runner_token: "AMCAWUJEJLTLKUSFQ3D65JDIOJP6C"
     runner_version: "2.326.0"
     runner_user: "ubuntu"
 
