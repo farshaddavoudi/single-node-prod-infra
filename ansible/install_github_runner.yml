@@ -1,0 +1,55 @@
+---
+- name: Install GitHub self-hosted runner
+  hosts: github_runner
+  become: yes
+  vars:
+    github_repo: "farshaddavoudi/single-node-prod-infra"
+    runner_name: "arvancloud-ubuntu-vm"
+    runner_token: "AMCAWUOG33PIEZO7CWMS2KTIOJE4K"
+    runner_version: "2.326.0"
+    runner_user: "ubuntu"
+
+  tasks:
+    - name: Ensure dependencies are installed
+      apt:
+        name: [curl, tar]
+        state: present
+        update_cache: yes
+
+    - name: Create runner directory
+      file:
+        path: /opt/github-runner
+        state: directory
+        owner: "{{ runner_user }}"
+        mode: 0755
+
+    - name: Download GitHub Actions runner
+      get_url:
+        url: "https://github.com/actions/runner/releases/download/v{{ runner_version }}/actions-runner-linux-x64-{{ runner_version }}.tar.gz"
+        dest: /opt/github-runner/runner.tar.gz
+        mode: 0644
+
+    - name: Extract runner
+      unarchive:
+        src: /opt/github-runner/runner.tar.gz
+        dest: /opt/github-runner/
+        remote_src: yes
+
+    - name: Configure the runner
+      become_user: "{{ runner_user }}"
+      shell: |
+        ./config.sh --unattended --url https://github.com/{{ github_repo }} --token {{ runner_token }} --name {{ runner_name }} --labels self-hosted,linux,ubuntu
+      args:
+        chdir: /opt/github-runner
+      environment:
+        RUNNER_ALLOW_RUNASROOT: "1"
+
+    - name: Install runner as a service
+      become_user: "{{ runner_user }}"
+      shell: |
+        sudo ./svc.sh install
+        sudo ./svc.sh start
+      args:
+        chdir: /opt/github-runner
+      environment:
+        RUNNER_ALLOW_RUNASROOT: "1"
