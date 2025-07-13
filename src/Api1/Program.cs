@@ -1,36 +1,29 @@
 ﻿using BlazorKCOidcBff.ApiService;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Net;
-using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-var keycloakAuthority = builder.Configuration["Keycloak:Authority"] ?? "http://localhost:8080/realms/ata/";
-var keycloakAudience = builder.Configuration["Keycloak:Audience"] ?? "ata-api1";
+const bool requireHttps = false;
+const string authenticationScheme = "OAuth2";
+string clientId = builder.Configuration["Keycloak:ClientId"]!;
+string clientSecret = builder.Configuration["Keycloak:ClientSecret"]!;
+string keycloakAuthority = builder.Configuration["Keycloak:Authority"]!;
+string keycloakAudience = builder.Configuration["Keycloak:Audience"]!;
+string scalarRedirectUrl = builder.Configuration["Keycloak:ScalarRedirectUri"]!;
+string scalarFaviconUrl = builder.Configuration["Scalar:FaviconUrl"]!;
 Console.WriteLine($"Keycloak Settings: Authority={keycloakAuthority} | Audience={keycloakAudience}");
-var requireHttps = false;
-System.Console.WriteLine($"The Keycloak URL: {keycloakAuthority}");
-
-const string authenticationSchemeConst = "OAuth2";
+Console.WriteLine($"The Keycloak URL: {keycloakAuthority}");
 
 builder.Services.AddAuthentication()
-    .AddJwtBearer(authenticationSchemeConst, jwtOptions =>
+    .AddJwtBearer(authenticationScheme, jwtOptions =>
 {
     jwtOptions.Authority = keycloakAuthority;
     jwtOptions.Audience = keycloakAudience;
     jwtOptions.RequireHttpsMetadata = requireHttps;
-
-    // Add these validation parameters
     jwtOptions.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -38,12 +31,11 @@ builder.Services.AddAuthentication()
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = keycloakAuthority,
-        ValidAudiences = new[] { "ata-api1", "account" } // All valid audiences
+        ValidAudiences = ["ata-api1", "account"] 
     };
 });
-builder.Services.AddAuthorization();
 
-#region Swagger + OAuth Integration
+builder.Services.AddAuthorization();
 
 builder.Services.AddOpenApi(options =>
 {
@@ -55,7 +47,7 @@ builder.Services.AddOpenApi(options =>
         {
             AuthorizationCode = new OpenApiOAuthFlow
             {
-                AuthorizationUrl = new Uri(builder.Configuration["Keycloak:Authority"]),
+                AuthorizationUrl = new Uri(keycloakAuthority),
                 TokenUrl = new Uri($"{keycloakAuthority}protocol/openid-connect/token"),
                 Scopes = new Dictionary<string, string>
                 {
@@ -67,14 +59,14 @@ builder.Services.AddOpenApi(options =>
         Reference = new OpenApiReference
         {
             Type = ReferenceType.SecurityScheme,
-            Id = authenticationSchemeConst
+            Id = authenticationScheme
         }
     };
 
     options.AddDocumentTransformer((document, context, ct) =>
     {
-        document.Components ??= new();
-        document.Components.SecuritySchemes.Add(authenticationSchemeConst, openApiSecurityScheme);
+        document.Components ??= new OpenApiComponents();
+        document.Components.SecuritySchemes.Add(authenticationScheme, openApiSecurityScheme);
         return Task.CompletedTask;
     });    
     
@@ -91,7 +83,7 @@ builder.Services.AddOpenApi(options =>
                         {
                             Reference = new OpenApiReference
                             {
-                                Id = authenticationSchemeConst,
+                                Id = authenticationScheme,
                                 Type = ReferenceType.SecurityScheme
                             }
                         },
@@ -104,8 +96,6 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
-
-
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -148,36 +138,33 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
 });
 
-builder.Services.Configure<ForwardedHeadersOptions>(options =>
-{
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+//builder.Services.Configure<ForwardedHeadersOptions>(options =>
+//{
+//    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 
-    // Add Traefik IP here. You can inspect this by checking `docker network inspect`
-    // or just allow all for now (use with caution in internal environments):
-    options.KnownNetworks.Clear(); // Clear any preconfigured networks
-    options.KnownProxies.Clear();  // Clear any preconfigured proxies
+//    // Add Traefik IP here. You can inspect this by checking `docker network inspect`
+//    // or just allow all for now (use with caution in internal environments):
+//    options.KnownNetworks.Clear(); // Clear any preconfigured networks
+//    options.KnownProxies.Clear();  // Clear any preconfigured proxies
 
-    // 👇 Allow all for testing — safe if you're in a controlled environment
-    options.KnownNetworks.Add(new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("0.0.0.0"), 0));
-});
-
-#endregion
+//    // 👇 Allow all for testing — safe if you're in a controlled environment
+//    options.KnownNetworks.Add(new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("0.0.0.0"), 0));
+//});
 
 var app = builder.Build();
 
 // ✅ This tells ASP.NET Core to respect X-Forwarded-Proto and X-Forwarded-Host headers (sent by Traefik)
-app.UseForwardedHeaders();
+//app.UseForwardedHeaders();
 
-app.Use(async (context, next) =>
-{
-    Console.WriteLine($"🔍 Effective URL: {context.Request.Scheme}://{context.Request.Host}{context.Request.Path}");
-    await next();
-});
+//app.Use(async (context, next) =>
+//{
+//    Console.WriteLine($"🔍 Effective URL: {context.Request.Scheme}://{context.Request.Host}{context.Request.Path}");
+//    await next();
+//});
 
-var redirectUrl = builder.Configuration["Keycloak:ScalarRedirectUri"];
-Console.WriteLine($"Redirect Scalar URL: {redirectUrl}");
+//var redirectUrl = builder.Configuration["Keycloak:ScalarRedirectUri"];
+//Console.WriteLine($"Redirect Scalar URL: {redirectUrl}");
 
-#region Swagger + OAuth Integration
 
 app.UseSwagger();
 //app.UseSwaggerUI(c =>
@@ -196,35 +183,31 @@ app.UseSwagger();
 //    c.ConfigObject.AdditionalItems["oauth2RedirectUrl"] = "https://api1.farshaddavoudi.ir/swagger/oauth2-redirect.html";
 //});
 
-#endregion
-
-#region Scalar + OAuth Integration
 
 app.MapOpenApi();
+
 app.MapScalarApiReference(options =>
 {
     options
         .WithTheme(ScalarTheme.Solarized)
         .WithLayout(ScalarLayout.Modern)
-        .WithFavicon("https://scalar.com/logo-light.svg")
+        .WithFavicon(scalarFaviconUrl)
         .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
 
-    options.AddPreferredSecuritySchemes(authenticationSchemeConst);
+    options.AddPreferredSecuritySchemes(authenticationScheme);
 
-    options.AddAuthorizationCodeFlow(authenticationSchemeConst, flow =>
+    options.AddAuthorizationCodeFlow(authenticationScheme, flow =>
         {
-            flow.ClientId = builder.Configuration["Keycloak:ClientId"];
-            flow.ClientSecret = builder.Configuration["Keycloak:ClientSecret"];
+            flow.ClientId = clientId;
+            flow.ClientSecret = clientSecret;
             flow.AuthorizationUrl = $"{keycloakAuthority}protocol/openid-connect/auth";
             flow.Pkce = Pkce.Sha256;
             flow.TokenUrl = $"{keycloakAuthority}protocol/openid-connect/token";
-            flow.RedirectUri = builder.Configuration["Keycloak:ScalarRedirectUri"];
+            flow.RedirectUri = scalarRedirectUrl;
             flow.SelectedScopes = ["openid", "profile"];
         })
-        .AddDefaultScopes(authenticationSchemeConst, ["openid", "profile"]);
+        .AddDefaultScopes(authenticationScheme, ["openid", "profile"]);
 });
-
-#endregion
 
 app.MapWeatherApi();
 
