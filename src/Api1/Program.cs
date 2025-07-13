@@ -115,6 +115,18 @@ app.UseSwaggerUI(c =>
     c.OAuthUsePkce();
     c.EnablePersistAuthorization();
     c.OAuth2RedirectUrl("https://api1.farshaddavoudi.ir/swagger/oauth2-redirect.html");
+
+    // Explicitly configure the authorization URL
+    // ensures the Swagger UI JavaScript receives the correct base URL
+    c.ConfigObject.AdditionalItems["authorization"] = new
+    {
+        authorizationUrl = "https://sso.farshaddavoudi.ir/realms/ata/protocol/openid-connect/auth",
+        clientId = builder.Configuration["Keycloak:ClientId"],
+        scopes = new[] { "openid", "profile" },
+        usePkceWithAuthorizationCode = true
+    };
+
+    c.ConfigObject.AdditionalItems["oauth2RedirectUrl"] = "https://api1.farshaddavoudi.ir/swagger/oauth2-redirect.html";
 });
 
 #endregion
