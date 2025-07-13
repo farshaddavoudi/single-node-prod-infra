@@ -1,10 +1,12 @@
-﻿using BlazorKCOidcBff.ApiService;
+﻿using System.Net;
+using BlazorKCOidcBff.ApiService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +34,7 @@ builder.Services.AddAuthentication()
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = keycloakAuthority,
-        ValidAudiences = ["ata-api1", "account"] 
+        ValidAudiences = ["ata-api1", "account"]
     };
 });
 
@@ -69,8 +71,8 @@ builder.Services.AddOpenApi(options =>
         document.Components ??= new OpenApiComponents();
         document.Components.SecuritySchemes.Add(authenticationScheme, openApiSecurityScheme);
         return Task.CompletedTask;
-    });    
-    
+    });
+
     options.AddOperationTransformer((operation, context, ct) =>
     {
         if (context.Description.ActionDescriptor.EndpointMetadata.OfType<IAuthorizeData>().Any())
@@ -157,8 +159,8 @@ var app = builder.Build();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost,
-    KnownNetworks = {},
-    KnownProxies = {}
+    KnownNetworks = { new IPNetwork(IPAddress.Parse("0.0.0.0"), 0) },
+    KnownProxies = { }
 });
 
 //app.Use(async (context, next) =>
@@ -197,7 +199,9 @@ app.MapScalarApiReference(options =>
         .WithTheme(ScalarTheme.Solarized)
         .WithLayout(ScalarLayout.Modern)
         .WithFavicon(scalarFaviconUrl)
-        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
+        //.WithBaseServerUrl("https://api1.farshaddavoudi.ir")
+        ;
 
     options.AddPreferredSecuritySchemes(authenticationScheme);
 
