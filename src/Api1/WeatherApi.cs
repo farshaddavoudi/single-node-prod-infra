@@ -7,15 +7,23 @@ internal static class WeatherApi
 {
     internal static RouteGroupBuilder MapWeatherApi(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("");
+        var api = app.MapGroup("").WithTags("Weather");
 
         api.MapGet("weather-forecast", GetWeather)
+            .WithName("GetWeatherForecast")
+            .WithSummary("Get weather forecast")
+            .WithOpenApi()
             .RequireAuthorization();
 
         api.MapGet("user-info", GetUserInfoResponse)
+            .WithName("GetUserInfo")
+            .WithSummary("Get user info")
+            .WithOpenApi()
             .RequireAuthorization();
 
-        api.MapGet("ping", GetPing);
+        api.MapGet("ping", GetPing)
+            .WithOpenApi()
+            .WithSummary("Ping app");
 
         return api;
     }
