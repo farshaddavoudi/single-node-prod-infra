@@ -108,13 +108,13 @@ Console.WriteLine($"Redirect Swagger URL: {redirectUrl}");
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.OAuth2RedirectUrl(redirectUrl);
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API 1");
     c.OAuthClientId(builder.Configuration["Keycloak:ClientId"]);
     c.OAuthClientSecret(builder.Configuration["Keycloak:ClientSecret"]);
     c.OAuthAppName("API 1 OAuth - Swagger");
     c.OAuthUsePkce();
     c.EnablePersistAuthorization();
+    c.OAuth2RedirectUrl("https://api1.farshaddavoudi.ir/swagger/oauth2-redirect.html");
 });
 
 #endregion
