@@ -1,5 +1,6 @@
 ﻿using BlazorKCOidcBff.ApiService;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
@@ -153,8 +154,10 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// ✅ This tells ASP.NET Core to respect X-Forwarded-Proto and X-Forwarded-Host headers (sent by Traefik)
-//app.UseForwardedHeaders();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost
+});
 
 //app.Use(async (context, next) =>
 //{
