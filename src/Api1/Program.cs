@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,14 +74,30 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+
+    // Add Traefik IP here. You can inspect this by checking `docker network inspect`
+    // or just allow all for now (use with caution in internal environments):
+    options.KnownNetworks.Clear(); // Clear any preconfigured networks
+    options.KnownProxies.Clear();  // Clear any preconfigured proxies
+
+    // 👇 Allow all for testing — safe if you're in a controlled environment
+    options.KnownNetworks.Add(new Microsoft.AspNetCore.HttpOverrides.IPNetwork(IPAddress.Parse("0.0.0.0"), 0));
+});
+
 #endregion
 
 var app = builder.Build();
 
 // ✅ This tells ASP.NET Core to respect X-Forwarded-Proto and X-Forwarded-Host headers (sent by Traefik)
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+app.UseForwardedHeaders();
+
+app.Use(async (context, next) =>
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    Console.WriteLine($"🔍 Effective URL: {context.Request.Scheme}://{context.Request.Host}{context.Request.Path}");
+    await next();
 });
 
 var redirectUrl = builder.Configuration["Keycloak:SwaggerRedirectUri"];
