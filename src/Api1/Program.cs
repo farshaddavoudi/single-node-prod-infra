@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -119,6 +118,8 @@ app.MapOpenApi();
 
 app.MapScalarApiReference(options =>
 {
+    options.Title = "Api1 API doc";
+
     options
         .WithTheme(ScalarTheme.Solarized)
         .WithLayout(ScalarLayout.Modern)
