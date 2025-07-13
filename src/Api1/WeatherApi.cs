@@ -56,14 +56,18 @@ internal static class WeatherApi
                 .ToArray();
         return forecast;
     }
-    
+
     private static string[] GetPing(HttpContext context)
     {
         var ip = $"ip={context.Connection.RemoteIpAddress}";
-        var machine = $"machine=${Environment.MachineName}";
+        var machine = $"machine={Environment.MachineName}";
         var sso = $"sso: https://sso.farshaddavoudi.ir";
 
-        return [ip, machine, sso];
+        var headers = context.Request.Headers
+            .Select(h => $"header:{h.Key}={string.Join(",", h.Value.ToArray())}")
+            .ToArray();
+
+        return [ip, machine, sso, .. headers];
     }
 }
 
