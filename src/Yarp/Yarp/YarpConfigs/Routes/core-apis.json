@@ -1,0 +1,27 @@
+{
+  "CoreAppsReverseProxy": {
+    "Routes": {
+      "identity-api-route": {
+        "ClusterId": "api1-cluster",
+        "Match": {
+          "Path": "/api1/{**catch-all}"
+        },
+        "Transforms": [
+          {
+            "PathPattern": "{**catch-all}"
+          }
+        ]
+      }
+    },
+    "Clusters": {
+      "api1-cluster": {
+        "LoadBalancingPolicy": "PowerOfTwoChoices",
+        "Destinations": {
+          "Destination1": {
+            "Address": "https://api.farshaddavoudi.ir"
+          }
+        }
+      }
+    }
+  }
+}

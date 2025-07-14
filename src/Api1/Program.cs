@@ -16,6 +16,8 @@ string clientSecret = builder.Configuration["Keycloak:ClientSecret"]!;
 string keycloakAuthority = builder.Configuration["Keycloak:Authority"]!;
 string keycloakAudience = builder.Configuration["Keycloak:Audience"]!;
 string scalarRedirectUrl = builder.Configuration["Keycloak:ScalarRedirectUri"]!;
+string apiGatewayBaseUrl = builder.Configuration["Urls:ApiGateway:BaseUrl"]!;
+string apiGatewayIdentifierPath = builder.Configuration["Urls:ApiGateway:IdentifierPath"]!;
 string scalarFaviconUrl = builder.Configuration["Scalar:FaviconUrl"]!;
 Console.WriteLine($"Keycloak Settings: Authority={keycloakAuthority} | Audience={keycloakAudience}");
 Console.WriteLine($"The Keycloak URL: {keycloakAuthority}");
@@ -119,12 +121,16 @@ app.MapOpenApi();
 app.MapScalarApiReference(options =>
 {
     options.Title = "Api1 API doc";
-
     options
         .WithTheme(ScalarTheme.Solarized)
         .WithLayout(ScalarLayout.Modern)
         .WithFavicon(scalarFaviconUrl)
-        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient); // Change for React
+
+    if (builder.Environment.IsProduction())
+    {
+        options.AddServer($"{apiGatewayBaseUrl}{apiGatewayIdentifierPath}");
+    }
 
     options.AddPreferredSecuritySchemes(authenticationScheme);
 

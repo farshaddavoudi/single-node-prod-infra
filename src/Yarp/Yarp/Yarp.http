@@ -1,0 +1,6 @@
+@ATA.Core.Gateway.YARP_HostAddress = http://localhost:5070
+
+GET {{ATA.Core.Gateway.YARP_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
