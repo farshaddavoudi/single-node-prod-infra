@@ -124,8 +124,10 @@ app.MapScalarApiReference(options =>
     options
         .WithTheme(ScalarTheme.Solarized)
         .WithLayout(ScalarLayout.Modern)
+        .WithDarkMode(false)
         .WithFavicon(scalarFaviconUrl)
-        .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient); // Change for React
+        .WithDefaultHttpClient(ScalarTarget.Node, ScalarClient.Axios); //React
+        //.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient); //Blazor
 
     if (builder.Environment.IsProduction())
     {
