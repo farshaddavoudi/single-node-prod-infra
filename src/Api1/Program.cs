@@ -21,6 +21,7 @@ string apiGatewayIdentifierPath = builder.Configuration["Urls:ApiGateway:Identif
 string scalarFaviconUrl = builder.Configuration["Scalar:FaviconUrl"]!;
 Console.WriteLine($"Keycloak Settings: Authority={keycloakAuthority} | Audience={keycloakAudience}");
 Console.WriteLine($"The Keycloak URL: {keycloakAuthority}");
+Console.WriteLine($"The Keycloak RedirectURL: {scalarRedirectUrl}");
 
 builder.Services.AddAuthentication()
     .AddJwtBearer(authenticationScheme, jwtOptions =>
@@ -35,7 +36,7 @@ builder.Services.AddAuthentication()
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = keycloakAuthority,
-        ValidAudiences = ["ata-api1", "account"]
+        ValidAudiences = ["account"]
     };
 });
 
@@ -127,12 +128,9 @@ app.MapScalarApiReference(options =>
         .WithDarkMode(false)
         .WithFavicon(scalarFaviconUrl)
         .WithDefaultHttpClient(ScalarTarget.Node, ScalarClient.Axios); //React
-        //.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient); //Blazor
+                                                                       //.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient); //Blazor
 
-    if (builder.Environment.IsProduction())
-    {
-        options.AddServer($"{apiGatewayBaseUrl}{apiGatewayIdentifierPath}");
-    }
+    options.AddServer($"{apiGatewayBaseUrl}{apiGatewayIdentifierPath}");
 
     options.AddPreferredSecuritySchemes(authenticationScheme);
 

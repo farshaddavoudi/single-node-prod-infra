@@ -1,8 +1,16 @@
+using ConfigurationPlaceholders;
 using Yarp.YarpConfigs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureYarp();
+builder.SetYarpConfigProviders();
+
+if (builder.Environment.IsDevelopment())
+{
+    DotNetEnv.Env.Load();
+}
+
+builder.AddConfigurationPlaceholders(new EnvironmentVariableResolver());
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

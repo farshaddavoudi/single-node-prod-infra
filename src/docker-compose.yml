@@ -31,6 +31,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - Keycloak__Authority=https://sso.farshaddavoudi.ir/realms/ata/ # http://keycloak:8080/realms/ata/
+      - CORE_API1_API_URL=http://api1:8080
     depends_on:
       - keycloak
     networks:

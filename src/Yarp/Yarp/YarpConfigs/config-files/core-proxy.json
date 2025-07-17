@@ -1,5 +1,5 @@
 {
-  "CoreAppsReverseProxy": {
+  "core-proxy": {
     "Routes": {
       "identity-api-route": {
         "ClusterId": "api1-cluster",
@@ -17,8 +17,8 @@
       "api1-cluster": {
         "LoadBalancingPolicy": "PowerOfTwoChoices",
         "Destinations": {
-          "Destination1": {
-            "Address": "https://api1.farshaddavoudi.ir"
+          "destination1": {
+            "Address": "${CORE_API1_API_URL}"
           }
         }
       }
