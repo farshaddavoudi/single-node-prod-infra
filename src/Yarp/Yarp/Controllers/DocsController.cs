@@ -12,12 +12,18 @@ public class DocsController(IConfiguration configuration, IWebHostEnvironment we
     [HttpGet]
     public ContentResult Get()
     {
-        var services = configuration.GetSection("BackendServices").Get<List<BackendService>>() ?? new List<BackendService>();
-        var categories = services.GroupBy(s => s.Category);
+        var categories = configuration.GetSection("BackendServices").Get<List<BackendServiceCategory>>() ?? new List<BackendServiceCategory>();
 
         if (webHostEnvironment.IsProduction())
         {
-            services.ForEach(s => s.Url = $"{HttpContext.Request.PathBase}/{s.IdentifierPath}/scalar");
+            foreach (var category in categories)
+            {
+                if (category.Services == null) continue;
+                foreach (var service in category.Services)
+                {
+                    service.Url = $"{HttpContext.Request.PathBase}{service.IdentifierPath}";
+                }
+            }
         }
 
         var htmlBuilder = new StringBuilder();
@@ -26,15 +32,18 @@ public class DocsController(IConfiguration configuration, IWebHostEnvironment we
         foreach (var category in categories)
         {
             htmlBuilder.Append($"""
-                                    <h2>{category.Key}</h2>
-                                    <ul>
-                                """);
+                <h2>{category.Category} APIs</h2>
+                <ul>
+            """);
 
-            foreach (var service in category)
+            if (category.Services != null)
             {
-                htmlBuilder.Append($"""
-                                        <li>🔗 <a href="{service.Url}/scalar" target="_blank">{service.Name}</a></li>
-                                    """);
+                foreach (var service in category.Services)
+                {
+                    htmlBuilder.Append($"""
+                        <li>🔗 <a href="{service.Url}/scalar" target="_blank">{service.Name} doc</a></li>
+                    """);
+                }
             }
 
             htmlBuilder.Append("</ul>");
@@ -57,6 +66,24 @@ public class DocsController(IConfiguration configuration, IWebHostEnvironment we
                      font-family: Arial, sans-serif;
                      margin: 40px;
                      line-height: 1.6;
+                 }
+                 .gateway-status {
+                     display: flex;
+                     align-items: center;
+                     font-size: 1.2em;
+                     margin-bottom: 18px;
+                     color: #2d7a2d;
+                     font-weight: bold;
+                 }
+                 .gear {
+                     width: 24px;
+                     height: 24px;
+                     margin-right: 10px;
+                     animation: spin 1.2s linear infinite;
+                 }
+                 @keyframes spin {
+                     0% { transform: rotate(0deg); }
+                     100% { transform: rotate(360deg); }
                  }
                  h1 {
                      color: #333;
@@ -81,6 +108,15 @@ public class DocsController(IConfiguration configuration, IWebHostEnvironment we
              </style>
          </head>
          <body>
+             <div class="gateway-status">
+                 <svg class="gear" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <g>
+                         <circle cx="12" cy="12" r="3.5" stroke="#2d7a2d" stroke-width="2"/>
+                         <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="#2d7a2d" stroke-width="2" stroke-linecap="round"/>
+                     </g>
+                 </svg>
+                 API Gateway is running...
+             </div>
              <h1>AirParsiana API Docs</h1>
         """;
 }
