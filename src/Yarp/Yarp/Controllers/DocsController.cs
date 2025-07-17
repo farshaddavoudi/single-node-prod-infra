@@ -32,7 +32,7 @@ public class DocsController(IConfiguration configuration, IWebHostEnvironment we
         foreach (var category in categories)
         {
             htmlBuilder.Append($"""
-                <h2>{category.Category} APIs</h2>
+                <h2>📑 {category.Category} APIs</h2>
                 <ul>
             """);
 
