@@ -145,10 +145,14 @@ This project is a real-world, production-grade template for such scenarios, base
 
 1. Clone this repository
 2. Set up your cloud VM (Ubuntu recommended)
-3. Install Docker and Docker Compose
-4. Configure your DNS records for each subdomain
-5. Update environment variables and secrets as needed
-6. Deploy with Docker Compose and manage with Portainer
+3. Run `setup-pwless-ssh.ps1` to configure passwordless SSH access:
+   - This PowerShell script automates the process of setting up passwordless SSH authentication
+   - Copies your Windows SSH public key to the Linux server's authorized_keys folder
+   - Makes subsequent deployments and management much easier
+4. Install Docker and Docker Compose
+5. Configure your DNS records for each subdomain
+6. Update environment variables and secrets as needed
+7. Deploy with Docker Compose and manage with Portainer
 
 ## Who Should Use This?
 
