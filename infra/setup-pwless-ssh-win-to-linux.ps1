@@ -1,4 +1,4 @@
-# Save this as setup-ssh.ps1
+# Save this as setup-pwless-ssh-win-to-linux.ps1
 
 param (
     [Parameter(Position=0, Mandatory=$true)]
