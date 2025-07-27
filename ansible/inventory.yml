@@ -1,0 +1,14 @@
+---
+all:
+  children:
+    linux_servers:
+      hosts:
+        traefik_vm:
+          ansible_host: 192.168.1.180
+
+    github_runner:
+      hosts:
+        localhost:
+          ansible_host: 127.0.0.1
+          ansible_connection: local
+          ansible_user: ubuntu

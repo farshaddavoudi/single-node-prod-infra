@@ -1,0 +1,24 @@
+---
+- name: Setup Linux Servers
+  hosts: linux_servers
+  become: yes
+
+  vars:
+    install_git: true # Set to false to skip git installation
+    install_docker: false # Set to false to skip docker installation
+
+  roles:
+    - role: geerlingguy.docker
+      when: install_docker
+
+  tasks:
+    - name: Set timezone to Asia/Tehran
+      timezone:
+        name: Asia/Tehran
+
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+      when: install_git

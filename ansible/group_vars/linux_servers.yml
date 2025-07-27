@@ -1,0 +1,22 @@
+shecan_dns_server: 178.22.122.100
+
+# Docker Role Variables
+docker_edition: "ce"
+docker_service_manage: true
+docker_service_state: started
+docker_service_enabled: true
+docker_add_repo: true
+docker_packages_state: present
+docker_install_compose_plugin: true
+docker_install_compose: false
+docker_compose_package_state: present
+docker_obsolete_packages:
+  - docker
+  - docker.io
+  - docker-engine
+  - docker-doc
+  - docker-compose
+  - docker-compose-v2
+  - podman-docker
+  - containerd
+  - runc
