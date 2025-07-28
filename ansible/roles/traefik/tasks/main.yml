@@ -1,0 +1,57 @@
+---
+- name: Create Traefik directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ traefik_config_dir }}"
+    - "{{ traefik_config_dir }}/logs"
+
+- name: Copy Traefik static config
+  template:
+    src: traefik.yml.j2
+    dest: "{{ traefik_config_dir }}/traefik.yml"
+    mode: '0644'
+
+- name: Copy Traefik dynamic config
+  template:
+    src: config.yml.j2
+    dest: "{{ traefik_config_dir }}/config.yml"
+    mode: '0644'
+
+- name: Create empty acme.json
+  file:
+    path: "{{ traefik_config_dir }}/acme.json"
+    state: touch
+    mode: '0600'
+
+- name: Copy ArvanCloud token
+  template:
+    src: arvan-token.txt.j2
+    dest: "{{ traefik_config_dir }}/arvan-token.txt"
+    mode: '0600'
+
+- name: Create Traefik .env file from template
+  template:
+    src: .env.j2
+    dest: "{{ traefik_config_dir }}/.env"
+    owner: root
+    group: root
+    mode: '0600'  # Important for security as it contains secrets
+
+- name: Copy docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ traefik_config_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Create Docker network
+  docker_network:
+    name: "{{ traefik_network_name }}"
+    state: present
+
+- name: Deploy Traefik stack via docker-compose
+  ansible.builtin.command:
+    cmd: docker compose up -d
+    chdir: "{{ traefik_config_dir }}"

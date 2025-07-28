@@ -1,0 +1,57 @@
+services:
+  traefik:
+    image: traefik:{{ traefik_version }}
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    security_opt:
+      - no-new-privileges:true # helps to increase security
+    env_file:
+      - .env # store other secrets e.g., dashboard password
+    networks:
+      - proxy
+
+    environment:
+      - TRAEFIK_DASHBOARD_CREDENTIALS=${TRAEFIK_DASHBOARD_CREDENTIALS}
+      - ARVANCLOUD_API_KEY_FILE=/run/secrets/arvan-token # note using _FILE for docker secrets
+    secrets:
+      - arvan-token
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - {{ traefik_config_dir }}/traefik.yml:/traefik.yml:ro
+      - {{ traefik_config_dir }}/acme.json:/acme.json
+      - {{ traefik_config_dir }}/config.yml:/config.yml:ro
+    labels:
+      - "traefik.enable=true"
+      # http routers
+      - "traefik.http.routers.traefik.entryPoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`{{ traefik_domain }}`)"
+      # http middlewares
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # router middlewares
+      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
+      # tls
+      - "traefik.http.routers.traefik-secure.rule=Host(`{{ traefik_domain }}`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=arvancloud"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main={{ traefik_domain }}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.{{ traefik_domain }}"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+      # general config
+      #- "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      #- "traefik.docker.network=proxy"
+
+secrets:
+  arvan-token:
+    file: ./arvan-token.txt
+
+networks:
+  proxy:
+    external: true
+    name: {{ traefik_network_name }}
