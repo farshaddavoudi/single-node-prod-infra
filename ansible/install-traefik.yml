@@ -19,6 +19,7 @@
   roles:
     - role: traefik
       vars:
+        traefik_config_dir: "/srv/docker/traefik"
         traefik_arvan_token: "6d3df9bf-de8f-525f-a7cf-1f35d324bf05"
         traefik_dashboard_credentials: "admin:$$2y$$05$$RB6A1JPtqJxDqube9ibJGOKFlbasdXE1Gdk9lxkARfWrjoCdDjesG" # htpasswd -nbB username password. Default admin/Aa123456
         traefik_acme_staging: true # Set to false for production

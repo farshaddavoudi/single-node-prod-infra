@@ -5,12 +5,7 @@
 
   vars:
     install_git: true # Set to false to skip git installation
-    install_docker: false # Set to false to skip docker installation
     shecan_dns_server: 178.22.122.100 # Put the Shecan pro DNS here
-
-  roles:
-    - role: geerlingguy.docker
-      when: install_docker
 
   tasks:
     - name: Set timezone to Asia/Tehran
